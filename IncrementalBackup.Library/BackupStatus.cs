@@ -9,6 +9,8 @@ namespace IncrementalBackup.Library
     {
         public BackupRoot Root { get; private set; }
 
+        public HashSet<string> LastDeletedFiles { get; private set; } 
+
         public BackupStatus()
         {
             Root = new BackupRoot ();
@@ -29,6 +31,7 @@ namespace IncrementalBackup.Library
                 }
 
                 information.DeletedFiles = Root.Information.DeletedFiles;
+                information.ParentName = Root.Information.ParentName;
                 Root.Information = information;
             }
             else
@@ -43,6 +46,7 @@ namespace IncrementalBackup.Library
 
         private void ReadFilesInternal(string path)
         {
+            LastDeletedFiles = new HashSet<string>();
             using (var file = ZipFile.Open(path, ZipArchiveMode.Read))
             {
                 var informationFile = file.GetEntry("info.xml");
@@ -59,6 +63,7 @@ namespace IncrementalBackup.Library
                         Root.Information.ParentName = information.ParentName;
 
                         Root.Information.DeletedFiles.AddRange(information.DeletedFiles);
+                        LastDeletedFiles.AddRange(information.DeletedFiles);
                     }
                 }
                 ImportFiles(file, path);

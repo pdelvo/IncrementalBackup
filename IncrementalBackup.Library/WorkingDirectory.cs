@@ -58,10 +58,16 @@ namespace IncrementalBackup.Library
                     a =>
                     Root.Children.All(m => m.VirtualPath != a.VirtualPath));
 
+            SaveBackup (fileName, parentHash, removedFiles, addedFiles);
+
+        }
+
+        private void SaveBackup(string fileName, string parentHash, IEnumerable<BackupFile> removedFiles, IEnumerable<BackupFile> addedFiles)
+        {
             using (var file = ZipFile.Open(fileName, ZipArchiveMode.Create))
             {
                 var informationFile = file.CreateEntry("info.xml");
-                using (var stream = informationFile.Open())
+                using (var stream = informationFile.Open ())
                 {
                     var information = new BackupInformation
                                           {
@@ -78,16 +84,18 @@ namespace IncrementalBackup.Library
                     var relativeName = "data" + backupFile.VirtualPath.Substring(1);
                     var entry = file.CreateEntry(relativeName + "." + backupFile.FileHash);
 
-                    using (var stream = entry.Open())
+                    using (var stream = entry.Open ())
                     {
-                        using (var fileStream = new FileStream(Path.Combine(WorkingDirectoryPath, backupFile.VirtualPath.Substring(2)), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                        using (
+                            var fileStream =
+                                new FileStream(Path.Combine(WorkingDirectoryPath, backupFile.VirtualPath.Substring(2)),
+                                               FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                         {
                             fileStream.CopyTo(stream);
                         }
                     }
                 }
             }
-
         }
     }
 }
