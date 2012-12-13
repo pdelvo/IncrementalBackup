@@ -11,83 +11,18 @@ namespace IncrementalBackup
 {
     internal class Program
     {
+        internal static ICommand[] Commands;
+
         private static void Main(string[] parameters)
         {
-            #region old
-
-            //if (parameters.Length == 2)
-            //{
-            //    var workingDirectory = new WorkingDirectory(parameters[0]);
-            //    workingDirectory.ImportFiles ();
-
-            //    var backupStatus = new BackupStatus ();
-
-            //    string newId = new Random ().Next ().ToString ();
-
-            //    if (File.Exists(Path.Combine(parameters[1], "1.zip")))
-            //    {
-            //        File.Move(Path.Combine(parameters[1], "1.zip"), Path.Combine(parameters[1], newId + ".zip"));
-            //    }
-            //    else
-            //    {
-            //        newId = null;
-            //    }
-
-            //    backupStatus.ReadFiles(Path.Combine(parameters[1], newId + ".zip"), true);
-
-            //    workingDirectory.CreateIncrementalBackup(Path.Combine(parameters[1], "1.zip"), backupStatus, newId);
-            //}
-            //else if (parameters.Length == 3 && parameters[0] == "/u")
-            //{
-            //    var backupStatus = new BackupStatus ();
-
-            //    backupStatus.ReadFiles(parameters[1], true);
-
-
-            //    var groups = from x in backupStatus.Root.Children
-            //                 group x by x.ArchivePath
-            //                 into archives
-            //                 select archives;
-
-            //    foreach (var group in groups)
-            //    {
-            //        using (var archive = ZipFile.Open(group.Key, ZipArchiveMode.Read))
-            //        {
-            //            foreach (var backupFile in group)
-            //            {
-            //                var file = "data" + backupFile.VirtualPath.Substring(1) + "." + backupFile.FileHash;
-
-            //                var compressedFile = archive.GetEntry(file);
-            //                using (var stream = compressedFile.Open ())
-            //                {
-            //                    var resultFileName = Path.Combine(parameters[2], backupFile.VirtualPath.Substring(2));
-
-            //                    Directory.CreateDirectory(Path.GetDirectoryName(resultFileName));
-
-            //                    using (var fileStream = File.Create(resultFileName))
-            //                    {
-            //                        stream.CopyTo(fileStream);
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    Console.WriteLine(
-            //        "Usage: IncrementalBackup.exe [workingDirectory] [backupDirectory]\r\nIncrementalBackup.exe /u [archive] [resultDirectory]");
-            //}
-
-        #endregion
 
             PrintHeader ();
 
-            var commands = GetCommands();
+            var commands = Commands = GetCommands().ToArray ();
 
             if (parameters.Length < 1)
             {
-                //TODO: List commands
+                new HelpCommand().Progress(null, new string[0]);
             }
             else
             {
@@ -97,7 +32,10 @@ namespace IncrementalBackup
 
                 if (command == null)
                 {
-                    //Print options
+                    var color = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Command not found");
+                    Console.ForegroundColor = color;
                 }
                 else
                 {
@@ -143,7 +81,9 @@ namespace IncrementalBackup
 
         private static IEnumerable<ICommand> GetCommands()
         {
-            yield return new CreateCommand ();
+            yield return new HelpCommand();
+            yield return new CreateCommand();
+            yield return new ExtractCommand();
         }
     }
 }

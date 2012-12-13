@@ -14,14 +14,16 @@ namespace IncrementalBackup.Library
             Root = new BackupRoot ();
         }
 
-        public void ReadFiles(string path, bool recursive = false)
+        public void ReadFiles(string path, bool recursive = false, int maxDepth = 0)
         {
             if (File.Exists(path))
             {
                 ReadFilesInternal(path);
                 var information = Root.Information;
 
-                while (recursive && !string.IsNullOrEmpty(information.ParentName))
+                if (maxDepth <= 0) maxDepth = int.MaxValue;
+
+                while (maxDepth-- > 0 && recursive && !string.IsNullOrEmpty(information.ParentName))
                 {
                     ReadFilesInternal(Path.Combine(Path.GetDirectoryName(path), information.ParentName + ".zip"));
                 }
