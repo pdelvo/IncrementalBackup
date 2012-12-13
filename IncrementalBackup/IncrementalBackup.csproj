@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CombineCommand.cs" />
+    <Compile Include="Commands\CommandHelper.cs" />
     <Compile Include="Commands\CreateCommand.cs" />
     <Compile Include="Commands\ExtractCommand.cs" />
     <Compile Include="Commands\HelpCommand.cs" />

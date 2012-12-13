@@ -49,7 +49,7 @@ namespace IncrementalBackup.Library
                                              });
         }
 
-        public void CreateIncrementalBackup(string fileName,  BackupStatus backupStatus, string parentHash = null)
+        public void CreateIncrementalBackup(string fileName,  BackupStatus backupStatus, string parentHash = null, string comment = null, string issuer = null)
         {
             var addedFiles = Root.Children.Where(
                     a =>
@@ -62,7 +62,7 @@ namespace IncrementalBackup.Library
 
         }
 
-        private void SaveBackup(string fileName, string parentHash, IEnumerable<BackupFile> removedFiles, IEnumerable<BackupFile> addedFiles)
+        private void SaveBackup(string fileName, string parentHash, IEnumerable<BackupFile> removedFiles, IEnumerable<BackupFile> addedFiles, string comment = null, string issuer = null)
         {
             using (var file = ZipFile.Open(fileName, ZipArchiveMode.Create))
             {
@@ -75,7 +75,9 @@ namespace IncrementalBackup.Library
                                                   new HashSet<string>(
                                                   removedFiles.Select(a => a.VirtualPath)),
                                               ParentName = parentHash,
-                                              CreationDate = DateTime.Now
+                                              CreationDate = DateTime.Now,
+                                              Comment = comment,
+                                              Issuer = issuer
                                           };
                     information.Save(stream);
                 }

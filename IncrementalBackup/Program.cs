@@ -47,7 +47,7 @@ namespace IncrementalBackup
                     {
                         if (item.StartsWith("--"))
                         {
-                            var splittedItems = item.Split(new char[] {'='}, 1);
+                            var splittedItems = item.Split(new char[] {'='}, 2);
 
                             optionalParameters.Add(splittedItems[0], splittedItems.Length > 1 ? splittedItems[1] : null);
                         }

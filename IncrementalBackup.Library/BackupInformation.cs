@@ -13,6 +13,8 @@ namespace IncrementalBackup.Library
     {
         public HashSet<string> DeletedFiles { get; set; }
         public string ParentName { get; set; }
+        public string Comment { get; set; }
+        public string Issuer { get; set; }
         public DateTime CreationDate { get; set; }
 
         public static BackupInformation Read(Stream stream)
