@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncrementalBackup", "IncrementalBackup\IncrementalBackup.csproj", "{45A25572-38BF-422B-954B-4A32D57502B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncrementalBackup.Tests", "IncrementalBackup.Tests\IncrementalBackup.Tests.csproj", "{93911E9F-1909-4B1F-AEE8-5B7AF21C0976}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncrementalBackup.Library", "IncrementalBackup.Library\IncrementalBackup.Library.csproj", "{092EBB7C-C0C2-4E2E-BC68-0F3E9891447F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{45A25572-38BF-422B-954B-4A32D57502B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45A25572-38BF-422B-954B-4A32D57502B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45A25572-38BF-422B-954B-4A32D57502B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45A25572-38BF-422B-954B-4A32D57502B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93911E9F-1909-4B1F-AEE8-5B7AF21C0976}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93911E9F-1909-4B1F-AEE8-5B7AF21C0976}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93911E9F-1909-4B1F-AEE8-5B7AF21C0976}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93911E9F-1909-4B1F-AEE8-5B7AF21C0976}.Release|Any CPU.Build.0 = Release|Any CPU
+		{092EBB7C-C0C2-4E2E-BC68-0F3E9891447F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{092EBB7C-C0C2-4E2E-BC68-0F3E9891447F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{092EBB7C-C0C2-4E2E-BC68-0F3E9891447F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{092EBB7C-C0C2-4E2E-BC68-0F3E9891447F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
