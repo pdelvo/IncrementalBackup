@@ -33,7 +33,7 @@ namespace IncrementalBackup.Commands
 
             if (!File.Exists(zip))
                 throw new ArgumentException("Source directory not found.");
-            if (!Directory.Exists(Path.GetDirectoryName(resultPath)))
+            if (!Directory.Exists(Path.GetDirectoryName(Path.GetFullPath(resultPath))))
                 throw new ArgumentException("Destination directory not found.");
             if (File.Exists(resultPath))
                 throw new ArgumentException("Destination file already exists.");

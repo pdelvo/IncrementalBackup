@@ -58,7 +58,7 @@ namespace IncrementalBackup.Library
                     a =>
                     Root.Children.All(m => m.VirtualPath != a.VirtualPath));
 
-            SaveBackup (fileName, parentHash, removedFiles, addedFiles);
+            SaveBackup (fileName, parentHash, removedFiles, addedFiles, comment, issuer);
 
         }
 
