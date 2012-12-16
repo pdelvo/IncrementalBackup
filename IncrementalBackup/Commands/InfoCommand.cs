@@ -54,6 +54,7 @@ namespace IncrementalBackup.Commands
                 Console.WriteLine("{0}: {1}", "Deleted Files", backup.Root.Information.DeletedFiles.Count);
                 Console.WriteLine("{0}: {1}", "Added or modified Files", backup.Root.Children.Count);
                 Console.WriteLine("{0}: {1}", "Creation Date", backup.Root.Information.CreationDate);
+                Console.WriteLine("{0}: {1}", "Parent File", backup.Root.Information.ParentName);
                 Console.ForegroundColor = color;
             }
         }
