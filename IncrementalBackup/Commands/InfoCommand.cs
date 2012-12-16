@@ -14,9 +14,6 @@ namespace IncrementalBackup.Commands
             if (!File.Exists(parameters[0]))
                 throw new ArgumentException("Source directory not found.");
 
-            var backup = new BackupStatus ();
-            backup.ReadFiles(parameters[0]);
-
             var color = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(Path.GetFileName(parameters[0]) + ": ");
@@ -30,7 +27,7 @@ namespace IncrementalBackup.Commands
             {
                 color = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Magenta;
-                foreach (var backupFile in backup.Root.Children)
+                foreach (var backupFile in Backup.GetFiles(parameters[0]))
                 {
                     Console.WriteLine("{0}; {1}", backupFile.VirtualPath, backupFile.FileHash);
                 }
@@ -40,14 +37,16 @@ namespace IncrementalBackup.Commands
             {
                 color = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Magenta;
-                foreach (var backupFile in backup.Root.Information.DeletedFiles)
+                foreach (var backupFile in Backup.GetDeletedFiles(parameters[0]))
                 {
-                    Console.WriteLine( backupFile);
+                    Console.WriteLine(backupFile);
                 }
                 Console.ForegroundColor = color;
             }
             else
             {
+                var backup = Backup.GetStatus(parameters[0]);
+            ;
                 color = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine("{0}: {1}", "Issuer", backup.Root.Information.Issuer);

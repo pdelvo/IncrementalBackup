@@ -15,33 +15,10 @@ namespace IncrementalBackup.Commands
                 throw new ArgumentOutOfRangeException("parameters", "Parameter count must be 2");
             }
 
-            if (!Directory.Exists(parameters[0]))
-                throw new ArgumentException("Source directory not found.");
-            if (!Directory.Exists(parameters[1]))
-                throw new ArgumentException("Destination directory not found.");
-
             var issuer = CommandHelper.GetProperty(namedParameters, "--issuer", Environment.UserName);
             string comment = CommandHelper.GetProperty(namedParameters, "--comment", "Backup createt at " + DateTime.Now);
 
-            var workingDirectory = new WorkingDirectory(parameters[0]);
-            workingDirectory.ImportFiles();
-
-            var backupStatus = new BackupStatus();
-
-            string newId = new Random().Next().ToString();
-
-            if (File.Exists(Path.Combine(parameters[1], "1.zip")))
-            {
-                File.Move(Path.Combine(parameters[1], "1.zip"), Path.Combine(parameters[1], newId + ".zip"));
-            }
-            else
-            {
-                newId = null;
-            }
-
-            backupStatus.ReadFiles(Path.Combine(parameters[1], newId + ".zip"), true);
-
-            workingDirectory.CreateIncrementalBackup(Path.Combine(parameters[1], "1.zip"), backupStatus, newId, comment, issuer);
+            Backup.Create (parameters[0], parameters[1], issuer, comment);
         }
 
         public string Identifier

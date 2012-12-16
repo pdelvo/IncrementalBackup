@@ -23,52 +23,7 @@ namespace IncrementalBackup.Commands
                 a => string.Compare("--max-depth", a.Key, StringComparison.InvariantCultureIgnoreCase) == 0);
             int maxDepth = default(KeyValuePair<string, string>).Equals(result) ? 0 : int.Parse(result.Value);
 
-            if (!File.Exists(parameters[0]))
-                throw new ArgumentException("Source directory not found.");
-            if (!Directory.Exists(parameters[1]))
-                throw new ArgumentException("Destination directory not found.");
-
-            var backupStatus = new BackupStatus();
-
-            backupStatus.ReadFiles(parameters[0], true, maxDepth);
-
-
-            var groups = from x in backupStatus.Root.Children
-                         group x by x.ArchivePath
-                             into archives
-                             select archives;
-
-            Parallel.ForEach(groups, group =>
-                                         {
-                                             using (var archive = ZipFile.Open(group.Key, ZipArchiveMode.Read))
-                                             {
-                                                 foreach (var backupFile in group)
-                                                 {
-                                                     var file = "data" + backupFile.VirtualPath.Substring(1) + "." +
-                                                                backupFile.FileHash;
-
-                                                     var compressedFile = archive.GetEntry(file);
-                                                     using (var stream = compressedFile.Open ())
-                                                     {
-                                                         var resultFileName = Path.Combine(parameters[1],
-                                                                                           backupFile.VirtualPath
-                                                                                                     .Substring(2));
-
-                                                         Directory.CreateDirectory(Path.GetDirectoryName(resultFileName));
-
-                                                         if (File.Exists(resultFileName) && !force)
-                                                             Console.WriteLine("Overriding files is disabled. Use --force to enable it.");
-                                                         else if(force)
-                                                             File.Delete(resultFileName);
-
-                                                         using (var fileStream = File.Create(resultFileName))
-                                                         {
-                                                             stream.CopyTo(fileStream);
-                                                         }
-                                                     }
-                                                 }
-                                             }
-                                         });
+            Backup.Extract (parameters[0], parameters[1], maxDepth, force);
         }
 
         public string Identifier

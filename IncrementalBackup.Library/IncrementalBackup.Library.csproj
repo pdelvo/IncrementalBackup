@@ -48,6 +48,7 @@
     <Compile Include="BackupStatus.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FileHelpers.cs" />
+    <Compile Include="Backup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkingDirectory.cs" />
   </ItemGroup>

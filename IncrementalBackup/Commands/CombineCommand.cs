@@ -31,58 +31,10 @@ namespace IncrementalBackup.Commands
             string resultPath = parameters.Length == 2 ? parameters[1] : Path.GetTempFileName ();
             bool overrideZip = parameters.Length == 1;
 
-            if (!File.Exists(zip))
-                throw new ArgumentException("Source directory not found.");
-            if (!Directory.Exists(Path.GetDirectoryName(Path.GetFullPath(resultPath))))
-                throw new ArgumentException("Destination directory not found.");
-            if (File.Exists(resultPath))
-                throw new ArgumentException("Destination file already exists.");
+            Backup.Combine(zip, resultPath, maxDepth, issuer, comment);
 
-            var backupStatus = new BackupStatus ();
-
-            backupStatus.ReadFiles(parameters[0], true, maxDepth);
-
-
-            var groups = from x in backupStatus.Root.Children
-                         group x by x.ArchivePath
-                         into archives
-                         select archives;
-
-            using (var file = ZipFile.Open(resultPath, ZipArchiveMode.Create))
-            {
-                var informationFile = file.CreateEntry("info.xml");
-                using (var stream = informationFile.Open ())
-                {
-                    var information = new BackupInformation
-                                          {
-                                              DeletedFiles = backupStatus.LastDeletedFiles,
-                                              ParentName = backupStatus.Root.Information.ParentName,
-                                              CreationDate = DateTime.Now,
-                                              Issuer = issuer,
-                                              Comment = comment
-                                          };
-                    information.Save(stream);
-                }
-                foreach (var group in groups)
-                {
-                    using (var zipFile = ZipFile.Open(group.Key, ZipArchiveMode.Read))
-                    {
-                        foreach (var backupFile in group)
-                        {
-                            var relativeName = "data" + backupFile.VirtualPath.Substring(1);
-                            var entry = file.CreateEntry(relativeName + "." + backupFile.FileHash);
-
-                            using (var stream = entry.Open ())
-                            {
-                                using (var fileStream = zipFile.GetEntry(entry.FullName).Open ())
-                                {
-                                    fileStream.CopyTo(stream);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            if (overrideZip)
+                File.Move(zip, resultPath);
         }
 
         public string Identifier
