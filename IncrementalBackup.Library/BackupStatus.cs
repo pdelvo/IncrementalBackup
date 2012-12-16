@@ -79,19 +79,24 @@ namespace IncrementalBackup.Library
                 var directoryName = Path.GetDirectoryName(zipArchiveEntry.FullName);
                 if (directoryName != null)
                 {
-                    string virtualPath = "." + (directoryName.Replace("\\", "/") + "/" + Path.GetFileNameWithoutExtension(zipArchiveEntry.FullName)).Substring(4);
+                    string virtualPath = "." +
+                                         (directoryName.Replace("\\", "/") + "/" +
+                                          Path.GetFileNameWithoutExtension(zipArchiveEntry.FullName)).Substring(4);
                     var extension = Path.GetExtension(zipArchiveEntry.FullName);
                     if (extension != null && !Root.Information.DeletedFiles.Contains(virtualPath))
                     {
                         string hash = extension.Substring(1);
 
-                        Root.Children.Add(new BackupFile
-                                              {
-                                                  Name = Path.GetFileNameWithoutExtension(Path.GetFileName(zipArchiveEntry.FullName)),
-                                                  FileHash = hash,
-                                                  VirtualPath = virtualPath,
-                                                  ArchivePath = path
-                                              });
+                        if (Root.Children.All(a => a.VirtualPath != virtualPath))
+                            Root.Children.Add(new BackupFile
+                                                  {
+                                                      Name =
+                                                          Path.GetFileNameWithoutExtension(
+                                                              Path.GetFileName(zipArchiveEntry.FullName)),
+                                                      FileHash = hash,
+                                                      VirtualPath = virtualPath,
+                                                      ArchivePath = path
+                                                  });
                     }
                 }
             }
