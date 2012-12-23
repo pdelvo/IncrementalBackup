@@ -86,6 +86,7 @@ namespace IncrementalBackup
             yield return new ExtractCommand();
             yield return new CombineCommand();
             yield return new InfoCommand();
+            yield return new PackCommand();
         }
     }
 }

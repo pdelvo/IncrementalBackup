@@ -49,6 +49,7 @@
     <Compile Include="Commands\ExtractCommand.cs" />
     <Compile Include="Commands\HelpCommand.cs" />
     <Compile Include="Commands\InfoCommand.cs" />
+    <Compile Include="Commands\PackCommand.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

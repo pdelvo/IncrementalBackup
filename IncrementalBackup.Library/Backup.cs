@@ -87,6 +87,53 @@ namespace IncrementalBackup.Library
             });
         }
 
+        public static void Pack(string source, string destination, int maxDepth, bool force)
+        {
+            if (!File.Exists(source))
+                throw new ArgumentException("Source directory not found.");
+
+            if (File.Exists(destination) && !force)
+                Console.WriteLine(
+                    "Overriding files is disabled. Use --force to enable it.");
+            else if (force)
+                File.Delete(destination);
+
+            var backupStatus = new BackupStatus ();
+
+            backupStatus.ReadFiles(source, true, maxDepth);
+
+
+            var groups = from x in backupStatus.Root.Children
+                         group x by x.ArchivePath
+                         into archives
+                         select archives;
+            using (var resultArchive = ZipFile.Open(destination, ZipArchiveMode.Create))
+            {
+                foreach (var group in groups)
+                {
+                    using (var archive = ZipFile.Open(@group.Key, ZipArchiveMode.Read))
+                    {
+                        foreach (var backupFile in @group)
+                        {
+                            var file = "data" + backupFile.VirtualPath.Substring(1) + "." +
+                                       backupFile.FileHash;
+
+                            var compressedFile = archive.GetEntry(file);
+                            using (var stream = compressedFile.Open ())
+                            {
+                                var resultFileName = backupFile.VirtualPath.Substring(2);
+                                var entry = resultArchive.CreateEntry(resultFileName);
+                                using (var fileStream = entry.Open ())
+                                {
+                                    stream.CopyTo(fileStream);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public static void Combine(string zipPath, string resultPath, int maxDepth, string issuer,
                                    string comment)
         {
